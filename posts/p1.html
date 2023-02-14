@@ -64,9 +64,9 @@
       <h1 id="Post 1">Macaws Plebs 🦜🧐- A PyTorch Mnemonic</h1>
 
       <p>14 Feb 2023<br />
-      <p>I’ve been working on a project involving Split learning, i.e., privacy-preserving decentralized neural network training. Essentially, in situations where we don’t want to share data (sensitive content like patient records or medical images), we instead just share the activations from multiple client networks to a single server network which then passes back the gradients from backpropagation. I’ll have a more detailed blog post on this in the future when I’m finished with the project, so keep an eye out for that.</p>
+      <p>I’ve been working on a project involving Split learning, i.e., privacy-preserving decentralized neural network training. Essentially, in situations where we don’t want to share data (sensitive content like patient records or medical images), we instead just share the activations from multiple client networks to a single server network which then passes back the gradients during backpropagation. I’ll have a more detailed blog post on this in the future when I’m finished with the project, so keep an eye out for that.</p>
 
-      <p>As a PyTorch beginner, the lack of uniformity in different tutorials regarding the order of operations left me confused. However, I found a really excellent starting point - <a href = "https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html">Deep learning with PyTorch: A 60 min Blitz</a> (I’d say spend more than 60 min if you want to understand this fully). Inspired by this article, I decided to create a mnemonic <a href="#footnote-1">[1]</a> or acronym to make sure I have all the necessary mise en place to train a neural network module in PyTorch. </p>
+      <p>As a PyTorch beginner, the lack of uniformity in different tutorials regarding the order of operations left me really confused. However, I found an excellent starting point - <a href = "https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html">Deep learning with PyTorch: A 60 min Blitz</a> (Although, I spent more than 60 minutes to understand this fully). Inspired by this article, I decided to create an acronym/mnemonic <a href="#footnote-1">[1]</a> to streamline the mise en place for training a neural network in PyTorch. </p>
 
       <h2>The Acronym - MCOZ PLBS</h2>
 
@@ -130,11 +130,11 @@
         </tbody>
         </table>
 
-      <p>I pronounce it as <em><b>'Macaws Plebs'</b></em> (picture an elitist condescending Macaw 🦜🧐).</p>
+      <p>I pronounce it as <em><b>'Macaws Plebs'</b></em> (picture an elitist condescending macaw 🦜🧐).</p>
 
       <h2>Macaws in Action</h2>
 
-<p>Here's how I use MCOZ PLBS to train a typical ResNet classifier. We start by defining some key objects - the model (M), a loss function or criterion (C) and an optimizer (O). (There are a few more steps such as subclassing nn.Module or changing the final FC layer, but I've omitted them for brevity.)</p>
+<p>Here's how I use 'MCOZ PLBS' to train a typical ResNet classifier. We start by defining some key objects - the model (M), a loss function or criterion (C) and an optimizer (O). (There are a few more steps such as subclassing 'nn.Module' or changing the final FC layer, but I've omitted them for brevity).</p>
 
 
 <pre><code>
@@ -144,7 +144,7 @@ model.to(device)
 <b>optimizer = optim.Adam(model.parameters()) # O</b>
 </code></pre>
 
-<p>Now, the training loop to train the model for 50 epochs. We start by resetting the gradient (Z). Then the forward pass (P), loss calculation (L), backward pass (B), and finally, the parameter update (S).</p>
+<p>Now, for the main event- the training loop for 50 epochs. We start by resetting the gradient (Z). Then the forward pass (P), loss calculation (L), backward pass (B), and finally, the parameter update (S).</p>
 
 <pre><code>
 for epoch in range(50):
