@@ -172,7 +172,7 @@ print("DONE!!")
 
 
       <h2>A Split Macaw</h2>
-<p>The real utility of 'Macaws Plebs' is to easily implement variations of the vanilla training loop. For example, here is a simple Split Learning training loop with a single client network and a server network for classification. The client side has the data and does a feedforward calculation on the input data upto a 'cutoff layer'. Essentially, we have two of everything - two models (M), a loss function (C), and two optimizers (O). (The code is inspired by this <a href = "https://www.youtube.com/watch?v=VPL6ELWdJbg"> workshop </a> by the Camera Culture group, MIT.)</p>
+<p>'MCOZ PLBS' makes it really easy to implement all kinds of variations of the vanilla training loop. For example, here is a simple Split Learning classification training loop with a client network and a server network. The client side has the data and does a feedforward calculation on the input data upto a 'cutoff layer', after which the server takes over without ever seeing the data. Essentially, we have two of everything - two models (M), a loss function (C), and two optimizers (O). (The code is inspired by this <a href = "https://www.youtube.com/watch?v=VPL6ELWdJbg"> workshop </a> by the Camera Culture group, MIT.)</p>
 
 
 <pre><code>
