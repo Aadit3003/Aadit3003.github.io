@@ -169,16 +169,19 @@ print("DONE!!")
 
 
       <h2>A Split Macaw</h2>
-      <p>The real utility of 'Macaws Plebs' is to easily implement variations of the vanilla training loop. For example, here is a Split  Learning training loop for the same model. Now we have two ResNet models - client and Server with a division of responsibility. The client handles the forward pass, while the Server uses the activations (agnostic of the data) and simply passes back the gradients. 
-      (Inspired by this <a href = "https://www.youtube.com/watch?v=VPL6ELWdJbg"> workshop tutorial</a> by MIT)</p>
+<p>The real utility of 'Macaws Plebs' is to easily implement variations of the vanilla training loop. For example, here is a simple Split Learning training loop with a single client network and a server network for classification. The client side has the data and does a feedforward calculation on the input data upto a 'cutoff layer'. Essentially, we have two of everything - two models (M), a loss function (C), and two optimizers (O). (The code is inspired by this <a href = "https://www.youtube.com/watch?v=VPL6ELWdJbg"> workshop </a> by the Camera Culture group, MIT.)</p>
+
 
 <pre><code>
-<b>model = models.resnet34() # M</b>
-model.to(device)
-<b>criterion = nn.CrossEntropyLoss() # C</b>
-<b>optimizer = optim.Adam(model.parameters()) # O</b>
+<b>client_model = Client({"cut_layer":3}).to(device) # M</b>
+<b>server_model = Server({"cut_layer":3}).to(device) # M</b>
+criterion = nn.CrossEntropyLoss() # C
+<b>client_optimizer = optim.Adam(model.parameters()) # O</b>
+<b>server_optimizer = optim.Adam(model.parameters()) # O</b>
 </code></pre>
 
+
+<p> Now, in the training loop we have a division of responsibility - The client handles the forward pass, while the server (data agnostic) performs backpropagation. All this can be simply achieved by doing the steps of MCOZ PLBS twice. We can also scale this to multiple clients and train the network without any of the clients needing to share the data with the server.</p>
 <pre><code>
 for epoch in range(50):
   running_loss = 0.0
@@ -189,16 +192,16 @@ for epoch in range(50):
     client_optimizer.zero_grad() # Z
     server_optimizer.zero_grad() # Z
 
-    activations = client_model(inputs) # P
+    <b>activations = client_model(inputs) # P</b>
     server_inputs = activations.detach().clone()
     server_inputs = Variable(server_inputs, requires_grad = True)
-    outputs = server_model(server_inputs) # P
+    <b>outputs = server_model(server_inputs) # P</b>
 
     loss = criterion(outputs, labels) # L
-    loss.backward() # B
+    <b>loss.backward() # B</b>
 
     server_optimizer.step() # S
-    activations.backward(server_inputs.grad) # B
+    <b>activations.backward(server_inputs.grad) # B</b>
     client_optimizer.step() # S
 
     running_loss += loss.item()
@@ -210,10 +213,12 @@ for epoch in range(50):
 print("DONE!!")
 </code></pre>
 
-      <p>And that’s it. You now have all the ingredients to train your own neural network in PyTorch. I’d love to hear from my readers if you all have fun acronyms or mnemonics for CS-ey stuff.</p>
 
 
-      <p id="footnote-1">[1] The spelling of the word ‘mnemonic’ has been permanently stamped into my brain since age 11 when I misspelled the word in a National Spelling Bee as “P-N-E-M-O-N-I-C”  💀. In my defense, pneumonia, and pneumonic sound very similar.</p>
+      <p>And that’s it! You now have all the ingredients to train your own neural network in PyTorch I’d love to hear from my readers if you all have fun acronyms or mnemonics for CS-ey stuff.</p>
+
+
+      <p id="footnote-1"><em>[1] The spelling of the word ‘mnemonic’ has been permanently stamped into my brain since age 11 when I misspelled the word in a National Spelling Bee as “P-N-E-M-O-N-I-C”  💀. In my defense, pneumonia, and pneumonic sound very similar.</em></p>
 
 
 
