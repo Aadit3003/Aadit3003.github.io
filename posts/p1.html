@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Aadit Deshpande</title>
+    <title>Macaws Plebs 🦜🧐</title>
 
     <link rel="stylesheet" href="../stylesheets/styles.css">
     <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
@@ -37,7 +37,7 @@
 
         <h1><a href="https://aadit3003.github.io/">Aadit Deshpande</a></h1>
         
-          <img src="/assets/img/i1.jpg" alt="DP" />
+          <img src="/assets/img/Posts/p1.jpg" alt="DP" />
         
 
         <p>Contact: <a href="mailto:eylai@mit.edu">f20190077 [at] pilani.bits-pilani.ac.in</a><br>
@@ -59,10 +59,175 @@
       <section>
 
 
-      <h1 id="Post 1">Post 1</h1>
+      <h1 id="Post 1">Macaws Plebs 🦜🧐- A PyTorch Mnemonic</h1>
 
-      <p>Date: 21 Dec 2022<br />
-      <p>Coming Soon!</p>
+      <p>14 Feb 2023<br />
+      <p>I’ve been working on a project involving Split learning, i.e., privacy-preserving decentralized neural network training. Essentially, in situations where we don’t want to share data (sensitive content like patient records or medical images), we instead just share the activations from multiple client networks to a single server network which then passes back the gradients from backpropagation. I’ll have a more detailed blog post on this in the future when I’m finished with the project, so keep an eye out for that.</p>
+
+      <p>As a PyTorch beginner, the lack of uniformity in different tutorials regarding the order of operations left me confused. However, I found a really excellent starting point - <a href = "https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html">Deep learning with PyTorch: A 60 min Blitz</a> (I’d say spend more than 60 min if you want to understand this fully). Inspired by this article, I decided to create a mnemonic <a href="#footnote-1">[1]</a> or acronym to make sure I have all the necessary mise en place to train a neural network module in PyTorch. </p>
+
+      <h2>The Acronym - MCOZ PLBS</h2>
+
+
+        <table>
+          <tbody>
+        <tr>
+        <th>Letter</th>
+        <th>Step</th>
+        <th>Description</th>
+          </tr>
+          <tr>
+            <td><b>M</b></td>
+        <td>Model</td>
+        <td>Instance of the Neural network module class.</td>
+          </tr>
+
+          <tr>
+            <td><b>C</b></td>
+        <td>Criterion</td>
+        <td>Pick a loss function (BCE, MSE, etc.).</td>
+          </tr>
+          
+          <tr>
+            <td><b>O</b></td>
+        <td>Optimizer</td>
+        <td>Pick an optimizer (Adam, SGD, etc.).</td>
+          </tr>
+
+          <tr>
+            <td><b>Z</b></td>
+        <td>Zero</td>
+        <td>Reset the gradient for each new input.</td>
+          </tr>
+
+          <tr>
+            <td><b>P</b></td>
+        <td>Predict</td>
+        <td>Calculate the model’s prediction on the input.</td>
+          </tr>
+          
+          <tr>
+            <td><b>L</b></td>
+        <td>Loss</td>
+
+        <td>Calculate the loss (actual vs. predicted label).</td>
+          </tr>
+          
+          <tr>
+            <td><b>B</b></td>
+        <td>Backward</td>
+        <td>Backpropagation.</td>
+          </tr>
+
+          <tr>
+            <td><b>S</b></td>
+        <td>Step</td>
+        <td>Parameter update via the optimizer.</td>
+          </tr>
+
+        </tbody>
+        </table>
+
+      <p>I pronounce it as <em><b>'Macaws Plebs'</b></em> (picture an elitist condescending Macaw 🦜🧐).</p>
+
+      <h2>Macaws in Action</h2>
+
+<p>Here's how I use MCOZ PLBS to train a typical ResNet classifier. We start by defining some key objects - the model (M), a loss function or criterion (C) and an optimizer (O). (There are a few more steps such as subclassing nn.Module or changing the final FC layer, but I've omitted them for brevity.)</p>
+
+
+<pre><code>
+<b>model = models.resnet34() # M</b>
+model.to(device)
+<b>criterion = nn.CrossEntropyLoss() # C</b>
+<b>optimizer = optim.Adam(model.parameters()) # O</b>
+</code></pre>
+
+<p>Now, the training loop to train the model for 50 epochs. We start by resetting the gradient (Z). Then the forward pass (P), loss calculation (L), backward pass (B), and finally, the parameter update (S).</p>
+
+<pre><code>
+for epoch in range(50):
+  running_loss = 0.0
+
+  for i, data in enumerate(trainloader, 0):
+    inputs, labels = data
+
+    <b>optimizer.zero_grad() # Z</b>
+
+    <b>outputs = model(inputs) # P</b>
+    <b>loss = criterion(outputs, labels) # L</b>
+    <b>loss.backward() # B</b>
+    <b>optimizer.step() # S</b>
+
+    running_loss += loss.item()
+
+    if i % 100 == 99:
+      print(f"[{epoch + 1}, {i+1}] loss: {running_loss/100}")
+
+print("DONE!!")
+</code></pre>
+
+
+
+      <h2>A Split Macaw</h2>
+      <p>The real utility of 'Macaws Plebs' is to easily implement variations of the vanilla training loop. For example, here is a Split  Learning training loop for the same model. Now we have two ResNet models - client and Server with a division of responsibility. The client handles the forward pass, while the Server uses the activations (agnostic of the data) and simply passes back the gradients. 
+      (Inspired by this <a href = "https://www.youtube.com/watch?v=VPL6ELWdJbg"> workshop tutorial</a> by MIT)</p>
+
+<pre><code>
+<b>model = models.resnet34() # M</b>
+model.to(device)
+<b>criterion = nn.CrossEntropyLoss() # C</b>
+<b>optimizer = optim.Adam(model.parameters()) # O</b>
+</code></pre>
+
+<pre><code>
+for epoch in range(50):
+  running_loss = 0.0
+
+  for i, data in enumerate(trainloader, 0):
+    inputs, labels = data
+
+    client_optimizer.zero_grad() # Z
+    server_optimizer.zero_grad() # Z
+
+    activations = client_model(inputs) # P
+    server_inputs = activations.detach().clone()
+    server_inputs = Variable(server_inputs, requires_grad = True)
+    outputs = server_model(server_inputs) # P
+
+    loss = criterion(outputs, labels) # L
+    loss.backward() # B
+
+    server_optimizer.step() # S
+    activations.backward(server_inputs.grad) # B
+    client_optimizer.step() # S
+
+    running_loss += loss.item()
+
+    if i % 100 == 99:
+      print(f"[{epoch + 1}, {i+1}] loss: {running_loss/100}")
+      running_loss = 0.0
+
+print("DONE!!")
+</code></pre>
+
+      <p>And that’s it. You now have all the ingredients to train your own neural network in PyTorch. I’d love to hear from my readers if you all have fun acronyms or mnemonics for CS-ey stuff.</p>
+
+
+      <p id="footnote-1">[1] The spelling of the word ‘mnemonic’ has been permanently stamped into my brain since age 11 when I misspelled the word in a National Spelling Bee as “P-N-E-M-O-N-I-C”  💀. In my defense, pneumonia, and pneumonic sound very similar.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       <p><a href="../Blog.html">Back to blog</a></p>
 
