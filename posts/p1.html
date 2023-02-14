@@ -161,7 +161,8 @@ for epoch in range(50):
     running_loss += loss.item()
 
     if i % 100 == 99:
-      print(f"[{epoch + 1}, {i+1}] loss: {running_loss/100}")
+      print(f"[{epoch}, {i}] loss: {running_loss/100}")
+      running_loss = 0.0
 
 print("DONE!!")
 </code></pre>
@@ -198,8 +199,8 @@ for epoch in range(50):
     <b>outputs = server_model(server_inputs) # P</b>
 
     loss = criterion(outputs, labels) # L
-    <b>loss.backward() # B</b>
 
+    <b>loss.backward() # B</b>
     server_optimizer.step() # S
     <b>activations.backward(server_inputs.grad) # B</b>
     client_optimizer.step() # S
@@ -207,7 +208,7 @@ for epoch in range(50):
     running_loss += loss.item()
 
     if i % 100 == 99:
-      print(f"[{epoch + 1}, {i+1}] loss: {running_loss/100}")
+      print(f"[{epoch}, {i}] loss: {running_loss/100}")
       running_loss = 0.0
 
 print("DONE!!")
